@@ -81,6 +81,65 @@ async def chat(request: Request):
     return {"bot": bot_type, "answer": completion.choices[0].message.content}
 """
 
+"""
+from fastapi import FastAPI, Request
+from groq import Groq
+import json, glob
+
+app = FastAPI()
+client = Groq(api_key="gsk_GANTI_KEY_AKANG")
+
+MODEL = "openai/gpt-oss-120b"  # INI YANG AKANG PAKE YANG MASIH GRATIS
+
+def load_knowledge(bot_type):
+    texts = []
+    for file in glob.glob(f"*{bot_type}*.json") + glob.glob(f"knowledge/*{bot_type}*") + glob.glob("*.json"):
+        try:
+            with open(file, 'r') as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    for item in data:
+                        texts.append(f"Q: {item.get('question','')} A: {item.get('answer','')}")
+                else:
+                    texts.append(json.dumps(data, ensure_ascii=False))
+        except: pass
+    return "\n".join(texts)[:8000] # gpt-oss-120b context gede, bisa 8k
+
+KNOWLEDGE = {
+    "sekolah": load_knowledge("sekolah"),
+    "loker": load_knowledge("loker")
+}
+
+@app.post("/chat/{bot_type}")
+async def chat(bot_type: str, request: Request):
+    data = await request.json()
+    msg = data.get("message","")
+    knowledge = KNOWLEDGE.get(bot_type, "")
+
+    prompt = f""/"Kamu CS {bot_type} SMK Farmasi. WAJIB jawab pake KNOWLEDGE di bawah, jangan ngarang.
+
+    KNOWLEDGE:
+    {knowledge}
+
+    Pertanyaan user: {msg}
+    Kalo ga ada di knowledge, jawab: Maaf info itu belum ada, hubungi admin sekolah."/""
+
+    completion = client.chat.completions.create(
+        model=MODEL,
+        messages=[
+            {"role": "system", "content": prompt},
+            {"role": "user", "content": msg}
+        ],
+        temperature=0.1,
+        max_tokens=500
+    )
+    return {"answer": completion.choices[0].message.content}
+
+@app.post("/chat")
+async def chat_default(request: Request):
+    return await chat("sekolah", request)
+"""
+
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
 import os
@@ -97,17 +156,28 @@ PERSONAS = {
     "loker": "Kamu admin Loker SMK Farmasi Bandung. Info lowongan kerja farmasi, apotek, RS. Bantu bikin CV singkat. Bahasa Indonesia gaul sopan."
 }
 
+def load_knowledge(bot_type):
+    path = f"bots/bot-{bot_type}/knowledge"
+    text = ""
+    if os.path.exists(path):
+        for f in os.listdir(path):
+            with open(os.path.join(path, f), 'r') as file:
+                text += file.read() + "\n"
+    return text
+
 @app.post("/chat/{bot_type}")
 async def chat(bot_type: str, request: Request):
     data = await request.json()
     msg = data.get("message","")
-    persona = PERSONAS.get(bot_type, PERSONAS["sekolah"])
-    
+    #persona = PERSONAS.get(bot_type, PERSONAS["sekolah"])
+    knowledge = load_knowledge(bot_type)
+    system_prompt = f"Kamu bot {bot_type}. Gunakan info ini untuk jawab: {knowledge}. Jika tidak ada di info, jawab tidak tahu dan arahkan ke admin."
+
     try:
         completion = client.chat.completions.create(
             model=os.getenv("MODEL"),
             messages=[
-                {"role": "system", "content": persona},
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": msg}
             ],
             temperature=0.7,
