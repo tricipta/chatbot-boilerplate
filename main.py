@@ -86,7 +86,7 @@ from openai import OpenAI
 app = FastAPI()
 
 client = OpenAI(
-    api_key="gsk_xxxx",  # <-- ISI KEY GROQ
+    api_key=os.getenv("GROQ_API_KEY"),  # <-- ISI KEY GROQ
     base_url="https://api.groq.com/openai/v1"
 )
 
