@@ -90,10 +90,7 @@ load_dotenv()
 
 app = FastAPI()
 
-client = Groq(
-    api_key=os.getenv("GROQ_API_KEY"),  # <-- ISI KEY GROQ
-    base_url="https://api.groq.com/openai/v1"
-)
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 PERSONAS = {
     "sekolah": "Kamu CS SMK Farmasi Bandung. Ramah, singkat, jelas. Info pendaftaran, biaya, jurusan farmasi. Bahasa Indonesia sopan.",
