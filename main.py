@@ -82,8 +82,11 @@ async def chat(request: Request):
 """
 
 from fastapi import FastAPI, Request
+from dotenv import load_dotenv
 import os
 from openai import OpenAI
+
+load_dotenv()
 
 app = FastAPI()
 
