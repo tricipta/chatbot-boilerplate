@@ -40,7 +40,7 @@ async def chat(request: Request):
 def health():
     return {"status": "healthy"}
 """
-
+"""
 from fastapi import FastAPI, Request
 import os
 from dotenv import load_dotenv
@@ -79,3 +79,48 @@ async def chat(request: Request):
         ]
     )
     return {"bot": bot_type, "answer": completion.choices[0].message.content}
+"""
+from fastapi import FastAPI, Request
+from openai import OpenAI
+
+app = FastAPI()
+
+client = OpenAI(
+    api_key="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",  # <-- ISI KEY GROQ
+    base_url="https://api.groq.com/openai/v1"
+)
+
+PERSONAS = {
+    "sekolah": "Kamu CS SMK Farmasi Bandung. Ramah, singkat, jelas. Info pendaftaran, biaya, jurusan farmasi. Bahasa Indonesia sopan.",
+    "loker": "Kamu admin Loker SMK Farmasi Bandung. Info lowongan kerja farmasi, apotek, RS. Bantu bikin CV singkat. Bahasa Indonesia gaul sopan."
+}
+
+@app.post("/chat/{bot_type}")
+async def chat(bot_type: str, request: Request):
+    data = await request.json()
+    msg = data.get("message","")
+    persona = PERSONAS.get(bot_type, PERSONAS["sekolah"])
+    
+    try:
+        completion = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",  # Model Meta Llama gratis
+            messages=[
+                {"role": "system", "content": persona},
+                {"role": "user", "content": msg}
+            ],
+            temperature=0.7,
+            max_tokens=500
+        )
+        return {"answer": completion.choices[0].message.content}
+    except Exception as e:
+        print(f"Error Groq: {e}")
+        return {"answer": f"Maaf bot lagi sibuk: {e}"}
+
+# Buat backward compatibility sama gateway lama
+@app.post("/chat")
+async def chat_default(request: Request):
+    return await chat("sekolah", request)
+
+@app.get("/")
+def root():
+    return {"status": "Groq+Llama Active", "bots": ["sekolah", "loker"]}
