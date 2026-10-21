@@ -84,13 +84,13 @@ async def chat(request: Request):
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
 import os
-from openai import OpenAI
+from groq import Groq
 
 load_dotenv()
 
 app = FastAPI()
 
-client = OpenAI(
+client = Groq(
     api_key=os.getenv("GROQ_API_KEY"),  # <-- ISI KEY GROQ
     base_url="https://api.groq.com/openai/v1"
 )
@@ -108,7 +108,7 @@ async def chat(bot_type: str, request: Request):
     
     try:
         completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",  # Model Meta Llama gratis
+            model=os.getenv("MODEL"),
             messages=[
                 {"role": "system", "content": persona},
                 {"role": "user", "content": msg}
@@ -118,7 +118,7 @@ async def chat(bot_type: str, request: Request):
         )
         return {"answer": completion.choices[0].message.content}
     except Exception as e:
-        print(f"Error Groq: {e}")
+        print(f"Error: {e}")
         return {"answer": f"Maaf bot lagi sibuk: {e}"}
 
 # Buat backward compatibility sama gateway lama
@@ -128,4 +128,4 @@ async def chat_default(request: Request):
 
 @app.get("/")
 def root():
-    return {"status": "Groq+Llama Active", "bots": ["sekolah", "loker"]}
+    return {"status": "ExclusorAI Active", "bots": ["sekolah", "loker"]}
