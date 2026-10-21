@@ -80,7 +80,9 @@ async def chat(request: Request):
     )
     return {"bot": bot_type, "answer": completion.choices[0].message.content}
 """
+
 from fastapi import FastAPI, Request
+import os
 from openai import OpenAI
 
 app = FastAPI()
