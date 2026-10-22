@@ -169,9 +169,9 @@ def load_knowledge(bot_type):
 async def chat(bot_type: str, request: Request):
     data = await request.json()
     msg = data.get("message","")
-    #persona = PERSONAS.get(bot_type, PERSONAS["sekolah"])
+    persona = PERSONAS.get(bot_type, PERSONAS["sekolah"])
     knowledge = load_knowledge(bot_type)
-    system_prompt = f"Kamu bot {bot_type}. Gunakan info ini untuk jawab: {knowledge}. Jika tidak ada di info, jawab tidak tahu dan arahkan ke admin."
+    system_prompt = f"{persona}. Gunakan info ini untuk jawab: {knowledge}"
 
     try:
         completion = client.chat.completions.create(
