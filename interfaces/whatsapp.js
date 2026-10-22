@@ -44,4 +44,4 @@ async function startBot(agentName, phoneNumber, portApi) {
     })
 }
 
-startBot('dummy', '0881022758184', 8000)
+startBot('dummy', '62881022758184', 8000)
