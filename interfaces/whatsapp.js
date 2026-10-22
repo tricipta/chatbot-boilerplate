@@ -1,7 +1,7 @@
 const { default: makeWASocket, useMultiFileAuthState } = require('@whiskeysockets/baileys')
 const axios = require('axios')
 
-async function startBot(agentName, portApi) {
+async function startBot(agentName, phoneNumber, portApi) {
     const { state, saveCreds } = await useMultiFileAuthState(`auth_${agentName}`)
     const sock = makeWASocket({ 
         auth: state,
@@ -10,7 +10,6 @@ async function startBot(agentName, portApi) {
 
     // MINTA PAIRING CODE KALO BELUM LOGIN
     if (!sock.authState.creds.registered) {
-        const phoneNumber = "62881022758184"
         setTimeout(async () => {
             const code = await sock.requestPairingCode(phoneNumber)
             console.log(`\n🔥 KODE PAIRING UNTUK ${agentName}: ${code} 🔥`)
@@ -45,4 +44,4 @@ async function startBot(agentName, portApi) {
     })
 }
 
-startBot('dummy', 8000)
+startBot('dummy', '0881022758184', 8000)
