@@ -24,13 +24,13 @@ def load_knowledge():
     knowledge = "SMK Farmasi Bhakti Kencana Soreang, sekolah kejuruan farmasi terbaik di Kabupaten Bandung. Alamat: Jl. Raya Soreang-Banjaran No. 297, Soreang, Kabupaten Bandung. Jurusan: Farmasi dan Keperawatan"
     return knowledge
 
-@app.post("/chat/{client_id}")
-async def chat(client_id: str, request: Request):
+@app.post("/chat/{agent_name}")
+async def chat(agent_name: str, request: Request):
     data = await request.json()
     msg = data.get("message","")
-    
-    persona = load_persona(client_id)
-    knowledge = load_knowledge(client_id)
+
+    persona = load_persona(agent_name)
+    knowledge = load_knowledge(agent_name)
 
     system_prompt = f"{persona}. Gunakan info ini untuk jawab: {knowledge}"
     try:
