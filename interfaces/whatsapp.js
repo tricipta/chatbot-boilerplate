@@ -44,4 +44,4 @@ async function startAgent(agentName, phoneNumber, portApi) {
     })
 }
 
-starAgent('dummy', '62881022758184', 8000)
+startAgent('dummy', '62881022758184', 8000)
