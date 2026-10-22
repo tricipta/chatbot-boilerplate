@@ -152,7 +152,7 @@ app = FastAPI()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 PERSONAS = {
-    "sekolah": "Kamu CS SMK Farmasi Bandung. Ramah, singkat, jelas. Info pendaftaran, biaya, jurusan farmasi. Bahasa Indonesia sopan.",
+    "sekolah": "Kamu admin di SMK Farmasi Bandung. Ramah, singkat, jelas. Info pendaftaran, biaya, jurusan farmasi dan akademis. Bahasa Indonesia santai.",
     "loker": "Kamu admin Loker SMK Farmasi Bandung. Info lowongan kerja farmasi, apotek, RS. Bantu bikin CV singkat. Bahasa Indonesia gaul sopan."
 }
 
