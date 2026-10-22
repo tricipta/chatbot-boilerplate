@@ -1,7 +1,7 @@
 const { default: makeWASocket, useMultiFileAuthState } = require('@whiskeysockets/baileys')
 const axios = require('axios')
 
-async function startAgent(agentName, portApi) {
+async function startBot(agentName, portApi) {
     const { state, saveCreds } = await useMultiFileAuthState(`auth_${agentName}`)
     const sock = makeWASocket({ 
         auth: state,
@@ -45,4 +45,4 @@ async function startAgent(agentName, portApi) {
     })
 }
 
-startAgent('dummy', 8000)
+startBot('dummy', 8000)
