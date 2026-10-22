@@ -31,7 +31,7 @@ async function startAgent(agentName, phoneNumber, portApi) {
     })
 
     sock.ev.on('messages.upsert', async ({ messages }) => {
-        const url = 'http://127.0.0.1:${portApi}/chat'
+        var url = 'http://127.0.0.1:${portApi}/chat'
         const msg = messages[0]
         if (!msg.message || msg.key.fromMe) return
         const text = msg.message.conversation || msg.message.extendedTextMessage?.text
