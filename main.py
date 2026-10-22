@@ -16,11 +16,11 @@ def load_from_file(path):
                 text += file.read() + "\n"
     return text
 
-def load_persona():
+def load_persona(agent_name):
     persona = "Nama kamu Bhakso, kamu adalah digital assistant di SMK Farmasi Bandung. Pakai bahasa Indonesia yang sopan, ramah, singkat, jelas tapi tetap santai."
     return persona
 
-def load_knowledge():
+def load_knowledge(agent_name):
     knowledge = "SMK Farmasi Bhakti Kencana Soreang, sekolah kejuruan farmasi terbaik di Kabupaten Bandung. Alamat: Jl. Raya Soreang-Banjaran No. 297, Soreang, Kabupaten Bandung. Jurusan: Farmasi dan Keperawatan"
     return knowledge
 
