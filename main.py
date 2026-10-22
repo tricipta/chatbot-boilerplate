@@ -6,15 +6,9 @@ import os
 load_dotenv()
 
 app = FastAPI()
-
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-def load_persona():
-    persona = "Kamu digital assistant akademis di SMK Farmasi Bandung. Pakai bahasa Indonesia yang sopan, ramah, singkat, jelas tapi tetap santai."
-    return persona
-
-def load_knowledge():
-    path = f"brain"
+def load_from_file(path):
     text = ""
     if os.path.exists(path):
         for f in os.listdir(path):
@@ -22,10 +16,19 @@ def load_knowledge():
                 text += file.read() + "\n"
     return text
 
+def load_persona():
+    persona = "Nama kamu Bhakso, kamu adalah digital assistant di SMK Farmasi Bandung. Pakai bahasa Indonesia yang sopan, ramah, singkat, jelas tapi tetap santai."
+    return persona
+
+def load_knowledge():
+    knowledge = "SMK Farmasi Bhakti Kencana Soreang, sekolah kejuruan farmasi terbaik di Kabupaten Bandung. Alamat: Jl. Raya Soreang-Banjaran No. 297, Soreang, Kabupaten Bandung. Jurusan: Farmasi dan Keperawatan"
+    return knowledge
+
 @app.post("/chat/{client_id}")
 async def chat(client_id: str, request: Request):
     data = await request.json()
     msg = data.get("message","")
+    
     persona = load_persona(client_id)
     knowledge = load_knowledge(client_id)
 
