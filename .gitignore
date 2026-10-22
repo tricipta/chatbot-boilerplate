@@ -3,4 +3,7 @@ __pycache__
 
 .git
 .env
+
 interfaces/package-lock.json
+interfaces/auth_dummy
+interfaces/node_modules
