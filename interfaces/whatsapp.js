@@ -31,14 +31,13 @@ async function startAgent(agentName, phoneNumber, portApi) {
     })
 
     sock.ev.on('messages.upsert', async ({ messages }) => {
-        var url = 'http://127.0.0.1:${portApi}/chat'
         const msg = messages[0]
         if (!msg.message || msg.key.fromMe) return
         const text = msg.message.conversation || msg.message.extendedTextMessage?.text
         const sender = msg.key.remoteJid
         if (!text) return
         try {
-            const res = await axios.post(url, { message: text })
+            const res = await axios.post(`http://127.0.0.1:${portApi}/chat`, { message: text })
             await sock.sendMessage(sender, { text: res.data.answer || "Error" })
         } catch (e) { console.error(e.message) }
     })
