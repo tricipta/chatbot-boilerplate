@@ -23,7 +23,7 @@ async function startAgent(agentName, phoneNumber, portApi) {
         const { connection, lastDisconnect } = update
         if (connection === 'close') {
             const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== 401
-            if (shouldReconnect) startAgent(agentName, portApi)
+            if (shouldReconnect) startAgent(agentName, phoneNumber, portApi)
         }
         if (connection === 'open') {
             console.log(`✅ ${agentName} CONNECTED!`)
